@@ -1,0 +1,1635 @@
+/* ==========================================================================
+   AETHER TERMINAL — Material Design 3 + iOS Liquid Glass Design System
+   ========================================================================== */
+
+:root {
+  /* Paleta Escura Temática (Obsidian + Aurora) */
+  --bg-canvas: #050811;
+  --bg-elevated: #0b1120;
+  --bg-solid: #0f1629;
+
+  /* Tipografia */
+  --font-display: 'Syne', sans-serif;
+  --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
+
+  /* Cores de Texto */
+  --text-primary: #f1f5fb;
+  --text-secondary: #98a8c3;
+  --text-muted: #5e6f8c;
+
+  /* Cores de Destaque & Mercado */
+  --accent: #38bdf8;
+  --accent-glow: rgba(56, 189, 248, 0.35);
+  --accent-2: #a855f7;
+  --amber: #f5b731;
+
+  --buy: #00f5a0;
+  --buy-soft: rgba(0, 245, 160, 0.14);
+  --buy-border: rgba(0, 245, 160, 0.38);
+
+  --sell: #ff3b6b;
+  --sell-soft: rgba(255, 59, 107, 0.14);
+  --sell-border: rgba(255, 59, 107, 0.38);
+
+  --neutral-soft: rgba(148, 163, 184, 0.14);
+  --neutral-border: rgba(148, 163, 184, 0.28);
+
+  /* iOS Liquid Glass Tokens */
+  --glass-tint: rgba(14, 22, 40, 0.48);
+  --glass-tint-hover: rgba(19, 30, 54, 0.58);
+  --glass-blur: 18px;
+  --glass-saturate: 175%;
+  --glass-edge: rgba(255, 255, 255, 0.12);
+  --glass-specular: rgba(255, 255, 255, 0.24);
+  --glass-shadow: 0 14px 38px rgba(0, 0, 0, 0.42);
+
+  /* Raios & Movimento Material 3 */
+  --radius-xl: 24px;
+  --radius-lg: 18px;
+  --radius-md: 12px;
+  --radius-pill: 9999px;
+  --ease-m3: cubic-bezier(0.2, 0, 0, 1);
+  --dur-fast: 160ms;
+  --dur-med: 280ms;
+}
+
+/* Modo de Acessibilidade: Painéis Sólidos */
+[data-solid-panels="true"] .liquid-glass,
+[data-solid-panels="true"] .liquid-glass-flat {
+  background: var(--bg-solid) !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08), 0 8px 24px rgba(0, 0, 0, 0.38);
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .liquid-glass,
+  .liquid-glass-flat {
+    background: var(--bg-solid);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+}
+
+/* Reset & Base */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  min-height: 100%;
+  background-color: var(--bg-canvas);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.45;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+.mono {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+.text-buy { color: var(--buy); }
+.text-sell { color: var(--sell); }
+.text-accent { color: var(--accent); }
+
+.material-symbols-rounded {
+  font-variation-settings: 'FILL' 0, 'wght' 500, 'GRAD' 0, 'opsz' 20;
+  font-size: 19px;
+  vertical-align: middle;
+  user-select: none;
+}
+
+/* Scrollbar Sutil */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.22);
+  border-radius: 99px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(56, 189, 248, 0.45);
+}
+
+/* ==========================================================================
+   Fundo Atmosférico Líquido (Aurora Orbs + Grade Técnica)
+   ========================================================================== */
+.ambient-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(110px);
+  opacity: 0.32;
+  animation: orbDrift 22s ease-in-out infinite alternate;
+}
+
+.orb-1 {
+  width: 520px;
+  height: 520px;
+  background: radial-gradient(circle, #00f5a0 0%, transparent 70%);
+  top: -160px;
+  left: -120px;
+}
+
+.orb-2 {
+  width: 560px;
+  height: 560px;
+  background: radial-gradient(circle, #2563eb 0%, transparent 70%);
+  top: 18%;
+  right: -180px;
+  animation-delay: -7s;
+}
+
+.orb-3 {
+  width: 480px;
+  height: 480px;
+  background: radial-gradient(circle, #ff3b6b 0%, transparent 72%);
+  bottom: -180px;
+  left: 30%;
+  opacity: 0.2;
+  animation-delay: -13s;
+}
+
+.grid-overlay {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.024) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.024) 1px, transparent 1px);
+  background-size: 42px 42px;
+  mask-image: radial-gradient(ellipse at center, black 35%, transparent 90%);
+}
+
+@keyframes orbDrift {
+  0% { transform: translate(0, 0) scale(1); }
+  100% { transform: translate(45px, 30px) scale(1.12); }
+}
+
+/* ==========================================================================
+   Superfícies Liquid Glass (iOS + M3)
+   ========================================================================== */
+.liquid-glass {
+  position: relative;
+  background: var(--glass-tint);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  border-radius: var(--radius-xl);
+  box-shadow:
+    inset 0 1px 0 var(--glass-specular),
+    inset 0 0 0 1px var(--glass-edge),
+    var(--glass-shadow);
+  transition:
+    transform var(--dur-med) var(--ease-m3),
+    background var(--dur-fast) var(--ease-m3),
+    box-shadow var(--dur-med) var(--ease-m3);
+}
+
+.liquid-glass-flat {
+  background: rgba(8, 13, 25, 0.72);
+  -webkit-backdrop-filter: blur(14px) saturate(160%);
+  backdrop-filter: blur(14px) saturate(160%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* ==========================================================================
+   1. Ticker Tape Superior
+   ========================================================================== */
+.ticker-bar {
+  position: sticky;
+  top: 0;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  height: 36px;
+  overflow: hidden;
+}
+
+.ticker-badge {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 14px;
+  height: 100%;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--buy);
+  background: rgba(0, 245, 160, 0.08);
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.live-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--buy);
+  box-shadow: 0 0 10px var(--buy);
+  animation: pulseDot 1.6s infinite;
+}
+
+@keyframes pulseDot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.35; transform: scale(0.8); }
+}
+
+.ticker-viewport {
+  flex: 1;
+  overflow: hidden;
+  mask-image: linear-gradient(90deg, transparent, black 3%, black 97%, transparent);
+}
+
+.ticker-track {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  width: max-content;
+  padding-left: 16px;
+  animation: tickerScroll 42s linear infinite;
+}
+
+.ticker-viewport:hover .ticker-track {
+  animation-play-state: paused;
+}
+
+@keyframes tickerScroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.ticker-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  cursor: pointer;
+  padding: 3px 8px;
+  border-radius: var(--radius-pill);
+  transition: background var(--dur-fast) var(--ease-m3);
+}
+
+.ticker-item:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.ticker-sym {
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.ticker-prc {
+  color: var(--text-secondary);
+}
+
+.ticker-chg {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 1px 6px;
+  border-radius: var(--radius-pill);
+}
+
+.ticker-chg.up {
+  color: var(--buy);
+  background: var(--buy-soft);
+}
+
+.ticker-chg.down {
+  color: var(--sell);
+  background: var(--sell-soft);
+}
+
+/* ==========================================================================
+   2. Topbar Flutuante
+   ========================================================================== */
+.topbar-wrap {
+  position: relative;
+  z-index: 40;
+  max-width: 1620px;
+  margin: 14px auto 0;
+  padding: 0 18px;
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 10px 16px;
+  border-radius: var(--radius-pill);
+}
+
+.topbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.brand-emblem {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(135deg, rgba(0, 245, 160, 0.25), rgba(56, 189, 248, 0.35));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 0 20px rgba(56, 189, 248, 0.25);
+  color: var(--text-primary);
+}
+
+.brand-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.05;
+}
+
+.brand-name {
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+
+.brand-tag {
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  color: var(--accent);
+  letter-spacing: 0.14em;
+}
+
+/* Pílulas de Pares */
+.pair-pills {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px;
+  background: rgba(5, 8, 17, 0.45);
+  border-radius: var(--radius-pill);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.pair-pills::-webkit-scrollbar { display: none; }
+
+.pair-pill {
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 7px 14px;
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all var(--dur-fast) var(--ease-m3);
+}
+
+.pair-pill:hover {
+  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.pair-pill.active {
+  color: #041019;
+  background: linear-gradient(135deg, var(--buy), var(--accent));
+  box-shadow: 0 4px 16px rgba(0, 245, 160, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.5);
+}
+
+.pair-pill:active,
+.icon-pill-btn:active,
+.tf-btn:active {
+  transform: scale(0.96);
+}
+
+.topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.status-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 12px;
+  border-radius: var(--radius-pill);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--amber);
+}
+
+.status-dot.online {
+  background: var(--buy);
+  box-shadow: 0 0 10px var(--buy);
+}
+
+.status-dot.sim {
+  background: var(--amber);
+  box-shadow: 0 0 10px var(--amber);
+}
+
+.icon-pill-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  height: 36px;
+  padding: 0 12px;
+  border-radius: var(--radius-pill);
+  border: 1px solid rgba(255, 255, 255, 0.11);
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--dur-fast) var(--ease-m3);
+}
+
+.icon-pill-btn:hover {
+  background: rgba(56, 189, 248, 0.16);
+  border-color: rgba(56, 189, 248, 0.45);
+}
+
+/* ==========================================================================
+   3. Shell Principal & KPIs
+   ========================================================================== */
+.dashboard-shell {
+  position: relative;
+  z-index: 10;
+  max-width: 1620px;
+  margin: 16px auto 40px;
+  padding: 0 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.market-kpi-strip {
+  display: grid;
+  grid-template-columns: 1.7fr repeat(4, 1fr);
+  gap: 14px;
+}
+
+.kpi-card {
+  padding: 16px 18px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.kpi-card:hover {
+  transform: translateY(-2px);
+  background: var(--glass-tint-hover);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.32),
+    inset 0 0 0 1px rgba(56, 189, 248, 0.22),
+    0 18px 42px rgba(0, 0, 0, 0.48);
+}
+
+.kpi-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.asset-title-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.asset-symbol {
+  font-family: var(--font-display);
+  font-size: 17px;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+}
+
+.exchange-tag {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  padding: 2px 7px;
+  border-radius: var(--radius-pill);
+  color: var(--accent);
+  background: rgba(56, 189, 248, 0.14);
+  border: 1px solid rgba(56, 189, 248, 0.3);
+}
+
+.change-pill {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: var(--radius-pill);
+}
+
+.change-pill.up {
+  color: var(--buy);
+  background: var(--buy-soft);
+  border: 1px solid var(--buy-border);
+}
+
+.change-pill.down {
+  color: var(--sell);
+  background: var(--sell-soft);
+  border: 1px solid var(--sell-border);
+}
+
+.change-pill.neutral {
+  color: var(--text-secondary);
+  background: var(--neutral-soft);
+  border: 1px solid var(--neutral-border);
+}
+
+.hero-price-row {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.hero-price {
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  transition: color 180ms ease;
+}
+
+.hero-price.flash-up { color: var(--buy); }
+.hero-price.flash-down { color: var(--sell); }
+
+.hero-delta {
+  font-size: 12.5px;
+  color: var(--text-secondary);
+}
+
+.range-track-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.range-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 10.5px;
+  color: var(--text-muted);
+}
+
+.range-labels strong {
+  color: var(--text-secondary);
+}
+
+.range-bar {
+  position: relative;
+  height: 6px;
+  border-radius: var(--radius-pill);
+  background: rgba(255, 255, 255, 0.08);
+  overflow: visible;
+}
+
+.range-fill {
+  height: 100%;
+  border-radius: var(--radius-pill);
+  background: linear-gradient(90deg, var(--sell), var(--amber), var(--buy));
+  transition: width 300ms var(--ease-m3);
+}
+
+.range-thumb {
+  position: absolute;
+  top: 50%;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: #fff;
+  border: 2px solid var(--accent);
+  box-shadow: 0 0 10px var(--accent);
+  transform: translate(-50%, -50%);
+  transition: left 300ms var(--ease-m3);
+}
+
+.kpi-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.kpi-label .material-symbols-rounded {
+  font-size: 17px;
+  opacity: 0.85;
+}
+
+.kpi-value {
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.kpi-sub {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.liquidity-mini-bar {
+  display: flex;
+  height: 5px;
+  border-radius: var(--radius-pill);
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.06);
+  gap: 2px;
+}
+
+.liq-bid {
+  background: var(--buy);
+  transition: width 280ms var(--ease-m3);
+}
+
+.liq-ask {
+  background: var(--sell);
+  transition: width 280ms var(--ease-m3);
+}
+
+/* ==========================================================================
+   4. Workspace Grid (Gráfico + Sinais | Painel Lateral)
+   ========================================================================== */
+.workspace-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.85fr) minmax(330px, 1fr);
+  gap: 16px;
+  align-items: start;
+}
+
+.primary-column,
+.side-column {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 0;
+}
+
+/* Card do Gráfico */
+.chart-card {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.chart-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.timeframe-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px;
+  background: rgba(5, 8, 17, 0.45);
+  border-radius: var(--radius-pill);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.tf-btn {
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+  transition: all var(--dur-fast) var(--ease-m3);
+}
+
+.tf-btn:hover {
+  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.tf-btn.active {
+  color: #fff;
+  background: rgba(56, 189, 248, 0.24);
+  box-shadow: inset 0 0 0 1px rgba(56, 189, 248, 0.5);
+}
+
+.overlay-toggles {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.chip-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  padding: 6px 10px;
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+  transition: all var(--dur-fast) var(--ease-m3);
+}
+
+.chip-toggle .material-symbols-rounded {
+  font-size: 14px;
+}
+
+.chip-toggle.active {
+  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.09);
+  border-color: rgba(255, 255, 255, 0.24);
+}
+
+.dot-ind {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+.dot-ema9 { background: #38bdf8; }
+.dot-ema21 { background: #f5b731; }
+.dot-sma50 { background: #c084fc; }
+
+.icon-mini-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-secondary);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  transition: all var(--dur-fast) var(--ease-m3);
+}
+
+.icon-mini-btn:hover {
+  color: var(--text-primary);
+  border-color: var(--accent);
+}
+
+.chart-stage {
+  position: relative;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: rgba(4, 7, 15, 0.65);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.ohlc-legend {
+  position: absolute;
+  top: 10px;
+  left: 12px;
+  z-index: 15;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 5px 11px;
+  border-radius: var(--radius-pill);
+  background: rgba(7, 11, 22, 0.68);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  font-size: 11px;
+  color: var(--text-muted);
+  pointer-events: none;
+}
+
+.ohlc-legend strong {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.tv-chart-container {
+  width: 100%;
+  height: 460px;
+}
+
+/* ==========================================================================
+   5. Motor de Sinais (Hora de Comprar / Hora de Vender)
+   ========================================================================== */
+.signal-deck {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  overflow: hidden;
+}
+
+.signal-deck.state-buy {
+  box-shadow:
+    inset 0 1px 0 rgba(0, 245, 160, 0.45),
+    inset 0 0 0 1px rgba(0, 245, 160, 0.32),
+    0 16px 40px rgba(0, 245, 160, 0.12);
+}
+
+.signal-deck.state-sell {
+  box-shadow:
+    inset 0 1px 0 rgba(255, 59, 107, 0.45),
+    inset 0 0 0 1px rgba(255, 59, 107, 0.32),
+    0 16px 40px rgba(255, 59, 107, 0.12);
+}
+
+.signal-hero-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.signal-verdict-box {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex: 1 1 360px;
+}
+
+.signal-icon-ring {
+  width: 58px;
+  height: 58px;
+  flex-shrink: 0;
+  border-radius: 20px;
+  display: grid;
+  place-items: center;
+  background: var(--neutral-soft);
+  border: 1px solid var(--neutral-border);
+  color: var(--text-primary);
+  transition: all var(--dur-med) var(--ease-m3);
+}
+
+.signal-icon-ring .material-symbols-rounded {
+  font-size: 30px;
+}
+
+.signal-icon-ring.buy {
+  background: var(--buy-soft);
+  border-color: var(--buy-border);
+  color: var(--buy);
+  box-shadow: 0 0 28px rgba(0, 245, 160, 0.28);
+}
+
+.signal-icon-ring.sell {
+  background: var(--sell-soft);
+  border-color: var(--sell-border);
+  color: var(--sell);
+  box-shadow: 0 0 28px rgba(255, 59, 107, 0.28);
+}
+
+.signal-eyebrow {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.12em;
+  color: var(--text-muted);
+  margin-bottom: 3px;
+}
+
+.signal-headline {
+  font-family: var(--font-display);
+  font-size: 21px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  line-height: 1.15;
+}
+
+.signal-headline.buy { color: var(--buy); }
+.signal-headline.sell { color: var(--sell); }
+.signal-headline.neutral { color: var(--amber); }
+
+.signal-reason {
+  margin-top: 4px;
+  font-size: 12.5px;
+  color: var(--text-secondary);
+}
+
+.signal-meter-box {
+  flex: 0 1 280px;
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: var(--radius-lg);
+  background: rgba(5, 8, 17, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.meter-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11.5px;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+}
+
+.conviction-track {
+  position: relative;
+  height: 10px;
+  border-radius: var(--radius-pill);
+  overflow: visible;
+  margin-bottom: 6px;
+}
+
+.conviction-gradient {
+  width: 100%;
+  height: 100%;
+  border-radius: var(--radius-pill);
+  background: linear-gradient(90deg, var(--sell) 0%, var(--amber) 50%, var(--buy) 100%);
+  opacity: 0.85;
+}
+
+.conviction-needle {
+  position: absolute;
+  top: 50%;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 3px solid #050811;
+  box-shadow: 0 0 12px rgba(255, 255, 255, 0.9);
+  transform: translate(-50%, -50%);
+  transition: left 420ms var(--ease-m3);
+}
+
+.meter-scale {
+  display: flex;
+  justify-content: space-between;
+  font-size: 9.5px;
+  color: var(--text-muted);
+}
+
+/* Grid dos 4 Indicadores */
+.indicators-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.ind-tile {
+  padding: 14px;
+  border-radius: var(--radius-lg);
+  background: rgba(6, 10, 20, 0.52);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  transition: border-color var(--dur-fast) var(--ease-m3), transform var(--dur-fast) var(--ease-m3);
+}
+
+.ind-tile:hover {
+  transform: translateY(-2px);
+  border-color: rgba(255, 255, 255, 0.18);
+}
+
+.ind-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+}
+
+.ind-name {
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--text-secondary);
+}
+
+.ind-badge {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: var(--radius-pill);
+}
+
+.ind-badge.buy {
+  color: var(--buy);
+  background: var(--buy-soft);
+  border: 1px solid var(--buy-border);
+}
+
+.ind-badge.sell {
+  color: var(--sell);
+  background: var(--sell-soft);
+  border: 1px solid var(--sell-border);
+}
+
+.ind-badge.neutral {
+  color: var(--text-secondary);
+  background: var(--neutral-soft);
+  border: 1px solid var(--neutral-border);
+}
+
+.ind-value {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.ind-mini-kv {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.ind-mini-kv strong {
+  color: var(--text-secondary);
+}
+
+.ind-desc {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+/* Barra RSI */
+.rsi-bar {
+  position: relative;
+  display: flex;
+  height: 6px;
+  border-radius: var(--radius-pill);
+  overflow: visible;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.rsi-zone.oversold {
+  width: 30%;
+  background: rgba(0, 245, 160, 0.45);
+  border-radius: 99px 0 0 99px;
+}
+.rsi-zone.mid {
+  width: 40%;
+  background: rgba(148, 163, 184, 0.25);
+}
+.rsi-zone.overbought {
+  width: 30%;
+  background: rgba(255, 59, 107, 0.45);
+  border-radius: 0 99px 99px 0;
+}
+
+.rsi-marker {
+  position: absolute;
+  top: 50%;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 0 8px #fff;
+  transform: translate(-50%, -50%);
+  transition: left 300ms var(--ease-m3);
+}
+
+/* Barra de Fluxo */
+.flow-bar {
+  display: flex;
+  height: 6px;
+  border-radius: var(--radius-pill);
+  overflow: hidden;
+  gap: 2px;
+}
+
+.flow-buy {
+  background: var(--buy);
+  transition: width 300ms var(--ease-m3);
+}
+.flow-sell {
+  background: var(--sell);
+  transition: width 300ms var(--ease-m3);
+}
+
+/* ==========================================================================
+   6. Painel Lateral: Order Book, Negócios em Tempo Real e Radar
+   ========================================================================== */
+.market-panel {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.segmented-control {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 4px;
+  padding: 4px;
+  background: rgba(5, 8, 17, 0.55);
+  border-radius: var(--radius-pill);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.seg-tab {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 8px 10px;
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+  transition: all var(--dur-fast) var(--ease-m3);
+}
+
+.seg-tab .material-symbols-rounded {
+  font-size: 16px;
+}
+
+.seg-tab.active {
+  color: var(--text-primary);
+  background: rgba(56, 189, 248, 0.22);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.28), inset 0 0 0 1px rgba(56, 189, 248, 0.45);
+}
+
+.tab-pane {
+  display: none;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.tab-pane.active {
+  display: flex;
+  animation: fadeSlide 220ms var(--ease-m3);
+}
+
+@keyframes fadeSlide {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Pressão do Order Book */
+.book-pressure {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.pressure-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+}
+
+.pressure-bar {
+  display: flex;
+  height: 7px;
+  border-radius: var(--radius-pill);
+  overflow: hidden;
+  gap: 2px;
+}
+
+.pressure-bid {
+  background: linear-gradient(90deg, rgba(0, 245, 160, 0.65), var(--buy));
+  transition: width 260ms var(--ease-m3);
+}
+
+.pressure-ask {
+  background: linear-gradient(90deg, var(--sell), rgba(255, 59, 107, 0.65));
+  transition: width 260ms var(--ease-m3);
+}
+
+.book-columns-head,
+.book-row {
+  display: grid;
+  grid-template-columns: 1.15fr 1fr 1.05fr;
+  align-items: center;
+  font-size: 11.5px;
+  padding: 4px 8px;
+}
+
+.book-columns-head {
+  color: var(--text-muted);
+  font-size: 10.5px;
+  text-transform: uppercase;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.book-columns-head span:nth-child(2),
+.book-columns-head span:nth-child(3),
+.book-row span:nth-child(2),
+.book-row span:nth-child(3) {
+  text-align: right;
+}
+
+.book-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.book-row {
+  position: relative;
+  border-radius: 7px;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.book-row .depth-bg {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  z-index: -1;
+  transition: width 200ms ease;
+}
+
+.book-row.ask .depth-bg {
+  background: rgba(255, 59, 107, 0.14);
+}
+
+.book-row.bid .depth-bg {
+  background: rgba(0, 245, 160, 0.14);
+}
+
+.book-row.ask .price-col { color: var(--sell); font-weight: 600; }
+.book-row.bid .price-col { color: var(--buy); font-weight: 600; }
+.book-row .qty-col { color: var(--text-primary); }
+.book-row .tot-col { color: var(--text-secondary); }
+
+.book-mid-strip {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 9px 12px;
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+}
+
+.mid-price {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.mid-spread {
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+
+/* Aba 2: Fluxo de Negócios (Live Trades) */
+.trades-summary-strip {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.ts-box {
+  padding: 8px 10px;
+  border-radius: var(--radius-md);
+  background: rgba(5, 8, 17, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.ts-lbl {
+  font-size: 10px;
+  color: var(--text-muted);
+}
+
+.trades-head,
+.trade-row {
+  display: grid;
+  grid-template-columns: 0.8fr 1.15fr 1.15fr 0.8fr;
+  align-items: center;
+  padding: 5px 8px;
+  font-size: 11.5px;
+}
+
+.trades-head {
+  font-size: 10.5px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.trades-head span:nth-child(n+2),
+.trade-row span:nth-child(n+2) {
+  text-align: right;
+}
+
+.trades-feed {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  max-height: 410px;
+  overflow-y: auto;
+}
+
+.trade-row {
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.02);
+  animation: tradePop 240ms var(--ease-m3);
+}
+
+.trade-row.whale {
+  background: rgba(245, 183, 49, 0.12);
+  box-shadow: inset 0 0 0 1px rgba(245, 183, 49, 0.35);
+}
+
+@keyframes tradePop {
+  from { opacity: 0; transform: translateX(-6px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+.side-tag {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 6px;
+  text-align: center;
+  width: fit-content;
+}
+
+.side-tag.buy {
+  color: var(--buy);
+  background: var(--buy-soft);
+}
+
+.side-tag.sell {
+  color: var(--sell);
+  background: var(--sell-soft);
+}
+
+.trade-time {
+  color: var(--text-muted);
+  font-size: 10.5px;
+}
+
+/* Aba 3: Watchlist / Radar */
+.watchlist-head,
+.watch-row {
+  display: grid;
+  grid-template-columns: 1.1fr 1.1fr 0.8fr;
+  align-items: center;
+  padding: 8px 10px;
+}
+
+.watchlist-head {
+  font-size: 10.5px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.watchlist-head span:nth-child(n+2),
+.watch-row span:nth-child(n+2) {
+  text-align: right;
+}
+
+.watchlist-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  max-height: 440px;
+  overflow-y: auto;
+}
+
+.watch-row {
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.025);
+  border: 1px solid transparent;
+  transition: all var(--dur-fast) var(--ease-m3);
+}
+
+.watch-row:hover {
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.watch-row.active {
+  background: rgba(56, 189, 248, 0.14);
+  border-color: rgba(56, 189, 248, 0.38);
+}
+
+/* ==========================================================================
+   7. Card de Log de Sinais
+   ========================================================================== */
+.alerts-card {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.alerts-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.alerts-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.alerts-title h3 {
+  font-size: 13.5px;
+  font-weight: 700;
+}
+
+.chip-mini {
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-secondary);
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+}
+
+.chip-mini:hover {
+  color: var(--text-primary);
+  border-color: var(--accent);
+}
+
+.signal-log-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-height: 205px;
+  overflow-y: auto;
+}
+
+.log-empty {
+  font-size: 12px;
+  color: var(--text-muted);
+  text-align: center;
+  padding: 18px 8px;
+}
+
+.log-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: var(--radius-md);
+  background: rgba(5, 8, 17, 0.45);
+  border-left: 3px solid var(--accent);
+  font-size: 11.5px;
+}
+
+.log-item.buy { border-left-color: var(--buy); }
+.log-item.sell { border-left-color: var(--sell); }
+
+.log-item-main {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.log-item-title {
+  font-weight: 700;
+}
+
+.log-item-meta {
+  font-size: 10.5px;
+  color: var(--text-muted);
+}
+
+/* ==========================================================================
+   8. Mobile Floating Pill Dock & Responsividade
+   ========================================================================== */
+.mobile-dock {
+  display: none;
+}
+
+@media (max-width: 1280px) {
+  .market-kpi-strip {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .kpi-hero {
+    grid-column: 1 / -1;
+  }
+  .workspace-grid {
+    grid-template-columns: 1fr;
+  }
+  .indicators-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .topbar-wrap {
+    padding: 0 12px;
+    margin-top: 10px;
+  }
+  .topbar {
+    border-radius: var(--radius-xl);
+    flex-wrap: wrap;
+    padding: 10px 12px;
+  }
+  .pair-pills {
+    order: 3;
+    width: 100%;
+  }
+  .btn-label {
+    display: none;
+  }
+  .dashboard-shell {
+    padding: 0 12px 92px;
+  }
+  .market-kpi-strip {
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .hero-price {
+    font-size: 24px;
+  }
+  .tv-chart-container {
+    height: 340px;
+  }
+  .indicators-grid {
+    grid-template-columns: 1fr;
+  }
+  .signal-headline {
+    font-size: 18px;
+  }
+
+  .mobile-dock {
+    position: fixed;
+    left: 14px;
+    right: 14px;
+    bottom: 14px;
+    z-index: 70;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    padding: 6px;
+    border-radius: var(--radius-pill);
+  }
+
+  .dock-btn {
+    border: none;
+    background: transparent;
+    color: var(--text-secondary);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    padding: 7px 4px;
+    border-radius: var(--radius-pill);
+    font-size: 10.5px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  .dock-btn.active {
+    color: var(--text-primary);
+    background: rgba(56, 189, 248, 0.22);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.28);
+  }
+}
