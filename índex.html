@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AETHER // Liquid Trading Terminal</title>
+
+  <!-- Fontes Personalizadas & Material Symbols Rounded -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Syne:wght@700;800&display=swap"
+    rel="stylesheet"
+  />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,400..600,0..1,-50..200"
+    rel="stylesheet"
+  />
+
+  <!-- TradingView Lightweight Charts v4.2.1 -->
+  <script src="https://unpkg.com/lightweight-charts@4.2.1/dist/lightweight-charts.standalone.production.js"></script>
+
+  <!-- Folha de Estilos Principal -->
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- Fundo Atmosférico Líquido -->
+  <div class="ambient-backdrop" aria-hidden="true">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+    <div class="grid-overlay"></div>
+  </div>
+
+  <!-- 1. Ticker Tape em Tempo Real -->
+  <header class="ticker-bar liquid-glass-flat" aria-label="Cotações em tempo real">
+    <div class="ticker-badge">
+      <span class="live-dot"></span>
+      <span>LIVE</span>
+    </div>
+    <div class="ticker-viewport">
+      <div class="ticker-track" id="tickerTrack"></div>
+    </div>
+  </header>
+
+  <!-- 2. Barra de Navegação Superior (M3 + Liquid Glass) -->
+  <nav class="topbar-wrap">
+    <div class="topbar liquid-glass">
+      <div class="topbar-brand">
+        <div class="brand-emblem">
+          <span class="material-symbols-rounded">candlestick_chart</span>
+        </div>
+        <div class="brand-text">
+          <span class="brand-name">AETHER</span>
+          <span class="brand-tag">LIQUID TERMINAL</span>
+        </div>
+      </div>
+
+      <!-- Seletor de Pares Rápidos -->
+      <div class="pair-pills" id="pairPills" role="tablist" aria-label="Pares de mercado">
+        <button class="pair-pill active" data-symbol="BTCUSDT">BTC/USDT</button>
+        <button class="pair-pill" data-symbol="ETHUSDT">ETH/USDT</button>
+        <button class="pair-pill" data-symbol="SOLUSDT">SOL/USDT</button>
+        <button class="pair-pill" data-symbol="BNBUSDT">BNB/USDT</button>
+        <button class="pair-pill" data-symbol="XRPUSDT">XRP/USDT</button>
+        <button class="pair-pill" data-symbol="AVAXUSDT">AVAX/USDT</button>
+      </div>
+
+      <!-- Controles de Conexão & Acessibilidade -->
+      <div class="topbar-actions">
+        <div class="status-chip" id="wsStatusChip" title="Status do WebSocket Binance">
+          <span class="status-dot" id="wsStatusDot"></span>
+          <span id="wsStatusText">Conectando...</span>
+        </div>
+
+        <button
+          type="button"
+          class="icon-pill-btn"
+          id="btnToggleGlass"
+          title="Alternar Vidro Líquido / Painéis Sólidos"
+          aria-pressed="false"
+        >
+          <span class="material-symbols-rounded">blur_on</span>
+          <span class="btn-label">Vidro</span>
+        </button>
+
+        <button
+          type="button"
+          class="icon-pill-btn"
+          id="btnReconnect"
+          title="Reconectar WebSocket"
+        >
+          <span class="material-symbols-rounded">sync</span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- 3. Conteúdo Principal do Dashboard -->
+  <main class="dashboard-shell">
+    <!-- Faixa de KPIs de Mercado -->
+    <section class="market-kpi-strip" aria-label="Resumo do ativo selecionado">
+      <article class="kpi-card kpi-hero liquid-glass">
+        <div class="kpi-head">
+          <div class="asset-title-group">
+            <span class="asset-symbol" id="activePairTitle">BTC / USDT</span>
+            <span class="exchange-tag">BINANCE SPOT</span>
+          </div>
+          <span class="change-pill neutral" id="kpiChangePill">0.00%</span>
+        </div>
+        <div class="hero-price-row">
+          <span class="hero-price mono" id="kpiPrice">--</span>
+          <span class="hero-delta mono" id="kpiPriceDelta">--</span>
+        </div>
+        <div class="range-track-wrap">
+          <div class="range-labels mono">
+            <span>Mín 24h: <strong id="kpiLowLabel">--</strong></span>
+            <span>Máx 24h: <strong id="kpiHighLabel">--</strong></span>
+          </div>
+          <div class="range-bar">
+            <div class="range-fill" id="kpiRangeFill" style="width: 50%"></div>
+            <div class="range-thumb" id="kpiRangeThumb" style="left: 50%"></div>
+          </div>
+        </div>
+      </article>
+
+      <article class="kpi-card liquid-glass">
+        <div class="kpi-label">
+          <span class="material-symbols-rounded">trending_up</span>
+          <span>Máxima 24h</span>
+        </div>
+        <div class="kpi-value mono text-buy" id="kpiHigh">--</div>
+        <div class="kpi-sub mono" id="kpiDistHigh">Dist. do topo: --</div>
+      </article>
+
+      <article class="kpi-card liquid-glass">
+        <div class="kpi-label">
+          <span class="material-symbols-rounded">trending_down</span>
+          <span>Mínima 24h</span>
+        </div>
+        <div class="kpi-value mono text-sell" id="kpiLow">--</div>
+        <div class="kpi-sub mono" id="kpiDistLow">Acima do fundo: --</div>
+      </article>
+
+      <article class="kpi-card liquid-glass">
+        <div class="kpi-label">
+          <span class="material-symbols-rounded">bar_chart</span>
+          <span>Volume 24h</span>
+        </div>
+        <div class="kpi-value mono" id="kpiVolumeQuote">--</div>
+        <div class="kpi-sub mono" id="kpiVolumeBase">--</div>
+      </article>
+
+      <article class="kpi-card liquid-glass">
+        <div class="kpi-label">
+          <span class="material-symbols-rounded">water_drop</span>
+          <span>Liquidez (Top 20 Book)</span>
+        </div>
+        <div class="kpi-value mono text-accent" id="kpiLiquidity">--</div>
+        <div class="liquidity-mini-bar">
+          <div class="liq-bid" id="kpiLiqBidBar" style="width: 50%"></div>
+          <div class="liq-ask" id="kpiLiqAskBar" style="width: 50%"></div>
+        </div>
+        <div class="kpi-sub mono" id="kpiSpread">Spread: --</div>
+      </article>
+    </section>
+
+    <!-- Grid Principal: Gráfico + Sinais (Esquerda) | Livro & Negócios (Direita) -->
+    <section class="workspace-grid">
+      <!-- Coluna Principal (Esquerda) -->
+      <div class="primary-column">
+        <!-- Card do Gráfico TradingView Lightweight Charts -->
+        <article class="chart-card liquid-glass">
+          <div class="chart-toolbar">
+            <div class="timeframe-group" id="timeframeGroup" role="group" aria-label="Tempo gráfico">
+              <button class="tf-btn active" data-interval="1m">1m</button>
+              <button class="tf-btn" data-interval="5m">5m</button>
+              <button class="tf-btn" data-interval="15m">15m</button>
+              <button class="tf-btn" data-interval="1h">1h</button>
+              <button class="tf-btn" data-interval="4h">4h</button>
+              <button class="tf-btn" data-interval="1d">1D</button>
+            </div>
+
+            <div class="overlay-toggles">
+              <button class="chip-toggle active" data-overlay="ema9">
+                <span class="dot-ind dot-ema9"></span>EMA 9
+              </button>
+              <button class="chip-toggle active" data-overlay="ema21">
+                <span class="dot-ind dot-ema21"></span>EMA 21
+              </button>
+              <button class="chip-toggle active" data-overlay="sma50">
+                <span class="dot-ind dot-sma50"></span>SMA 50
+              </button>
+              <button class="chip-toggle active" data-overlay="markers">
+                <span class="material-symbols-rounded">bolt</span>Sinais
+              </button>
+              <button class="icon-mini-btn" id="btnFitChart" title="Ajustar zoom do gráfico">
+                <span class="material-symbols-rounded">fit_screen</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Legenda OHLCV Flutuante -->
+          <div class="chart-stage">
+            <div class="ohlc-legend mono" id="ohlcLegend">
+              <span>O: <strong id="legO">--</strong></span>
+              <span>H: <strong id="legH">--</strong></span>
+              <span>L: <strong id="legL">--</strong></span>
+              <span>C: <strong id="legC">--</strong></span>
+              <span>Vol: <strong id="legV">--</strong></span>
+            </div>
+            <div id="tvChartContainer" class="tv-chart-container"></div>
+          </div>
+        </article>
+
+        <!-- Motor de Sinais: Hora de Comprar / Hora de Vender -->
+        <article class="signal-deck liquid-glass" id="signalDeckCard">
+          <div class="signal-hero-row">
+            <div class="signal-verdict-box" id="signalVerdictBox">
+              <div class="signal-icon-ring" id="signalIconRing">
+                <span class="material-symbols-rounded" id="signalIcon">hourglass_top</span>
+              </div>
+              <div class="signal-copy">
+                <span class="signal-eyebrow">MOTOR QUANTITATIVO EM TEMPO REAL</span>
+                <h2 class="signal-headline" id="signalHeadline">ANALISANDO MERCADO...</h2>
+                <p class="signal-reason" id="signalReason">
+                  Calculando RSI(14), MACD(12,26,9), cruzamentos de médias móveis e fluxo de ordens.
+                </p>
+              </div>
+            </div>
+
+            <div class="signal-meter-box">
+              <div class="meter-header">
+                <span>Índice de Convicção</span>
+                <strong class="mono" id="signalScoreValue">50 / 100</strong>
+              </div>
+              <div class="conviction-track">
+                <div class="conviction-gradient"></div>
+                <div class="conviction-needle" id="signalNeedle" style="left: 50%"></div>
+              </div>
+              <div class="meter-scale mono">
+                <span class="text-sell">VENDA FORTE</span>
+                <span>NEUTRO</span>
+                <span class="text-buy">COMPRA FORTE</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Grid de Indicadores Técnicos -->
+          <div class="indicators-grid">
+            <!-- RSI 14 -->
+            <div class="ind-tile">
+              <div class="ind-top">
+                <span class="ind-name">RSI (14)</span>
+                <span class="ind-badge neutral" id="rsiBadge">NEUTRO</span>
+              </div>
+              <div class="ind-value mono" id="rsiValue">--</div>
+              <div class="rsi-bar">
+                <div class="rsi-zone oversold"></div>
+                <div class="rsi-zone mid"></div>
+                <div class="rsi-zone overbought"></div>
+                <div class="rsi-marker" id="rsiMarker" style="left: 50%"></div>
+              </div>
+              <span class="ind-desc" id="rsiDesc">Zona 30–70 equilibrada</span>
+            </div>
+
+            <!-- MACD -->
+            <div class="ind-tile">
+              <div class="ind-top">
+                <span class="ind-name">MACD (12,26,9)</span>
+                <span class="ind-badge neutral" id="macdBadge">NEUTRO</span>
+              </div>
+              <div class="ind-value mono" id="macdValue">--</div>
+              <div class="ind-mini-kv mono">
+                <span>Sinal: <strong id="macdSignalVal">--</strong></span>
+                <span>Hist: <strong id="macdHistVal">--</strong></span>
+              </div>
+              <span class="ind-desc" id="macdDesc">Aguardando divergência</span>
+            </div>
+
+            <!-- Médias Móveis & Cruzamentos -->
+            <div class="ind-tile">
+              <div class="ind-top">
+                <span class="ind-name">Médias & Cruzamento</span>
+                <span class="ind-badge neutral" id="maBadge">NEUTRO</span>
+              </div>
+              <div class="ind-value mono" id="maCrossStatus">--</div>
+              <div class="ind-mini-kv mono">
+                <span>E9: <strong id="ema9Val">--</strong></span>
+                <span>E21: <strong id="ema21Val">--</strong></span>
+              </div>
+              <span class="ind-desc mono" id="sma50Desc">SMA50: --</span>
+            </div>
+
+            <!-- Fluxo de Compra vs Venda -->
+            <div class="ind-tile">
+              <div class="ind-top">
+                <span class="ind-name">Pressão de Fluxo</span>
+                <span class="ind-badge neutral" id="flowBadge">EQUILIBRADO</span>
+              </div>
+              <div class="ind-value mono" id="flowRatioVal">50% / 50%</div>
+              <div class="flow-bar">
+                <div class="flow-buy" id="flowBuyBar" style="width: 50%"></div>
+                <div class="flow-sell" id="flowSellBar" style="width: 50%"></div>
+              </div>
+              <span class="ind-desc" id="flowDesc">Agressão compradora vs vendedora</span>
+            </div>
+          </div>
+        </article>
+      </div>
+
+      <!-- Coluna Lateral (Direita): Order Book, Negócios em Tempo Real e Radar -->
+      <aside class="side-column">
+        <!-- Painel de Mercado (Abas M3 Segmentadas) -->
+        <article class="market-panel liquid-glass">
+          <div class="panel-header">
+            <div class="segmented-control" role="tablist">
+              <button class="seg-tab active" data-tab="orderbook">
+                <span class="material-symbols-rounded">menu_book</span>
+                Livro
+              </button>
+              <button class="seg-tab" data-tab="trades">
+                <span class="material-symbols-rounded">swap_vert</span>
+                Negócios
+              </button>
+              <button class="seg-tab" data-tab="watchlist">
+                <span class="material-symbols-rounded">radar</span>
+                Radar
+              </button>
+            </div>
+          </div>
+
+          <!-- Aba 1: Livro de Ofertas (Order Book) -->
+          <div class="tab-pane active" id="pane-orderbook">
+            <div class="book-pressure">
+              <div class="pressure-labels mono">
+                <span class="text-buy">Compras <strong id="bookBidPct">50%</strong></span>
+                <span class="text-sell"><strong id="bookAskPct">50%</strong> Vendas</span>
+              </div>
+              <div class="pressure-bar">
+                <div class="pressure-bid" id="bookBidBar" style="width: 50%"></div>
+                <div class="pressure-ask" id="bookAskBar" style="width: 50%"></div>
+              </div>
+            </div>
+
+            <div class="book-columns-head mono">
+              <span>Preço (USDT)</span>
+              <span>Qtd.</span>
+              <span>Total (USDT)</span>
+            </div>
+
+            <!-- Vendas (Asks) -->
+            <div class="book-list asks-list" id="asksList"></div>
+
+            <!-- Preço Central / Spread -->
+            <div class="book-mid-strip">
+              <span class="mid-price mono" id="bookMidPrice">--</span>
+              <span class="mid-spread mono" id="bookMidSpread">Spread: --</span>
+            </div>
+
+            <!-- Compras (Bids) -->
+            <div class="book-list bids-list" id="bidsList"></div>
+          </div>
+
+          <!-- Aba 2: Fluxo de Negócios (O que está sendo comprado e vendido) -->
+          <div class="tab-pane" id="pane-trades">
+            <div class="trades-summary-strip mono">
+              <div class="ts-box">
+                <span class="ts-lbl">Comprado (janela)</span>
+                <strong class="text-buy" id="recentBuyVol">$0</strong>
+              </div>
+              <div class="ts-box">
+                <span class="ts-lbl">Vendido (janela)</span>
+                <strong class="text-sell" id="recentSellVol">$0</strong>
+              </div>
+            </div>
+
+            <div class="trades-head mono">
+              <span>Lado</span>
+              <span>Preço</span>
+              <span>Valor (USDT)</span>
+              <span>Hora</span>
+            </div>
+
+            <div class="trades-feed" id="tradesFeed"></div>
+          </div>
+
+          <!-- Aba 3: Radar de Pares (Watchlist em Tempo Real) -->
+          <div class="tab-pane" id="pane-watchlist">
+            <div class="watchlist-head mono">
+              <span>Ativo</span>
+              <span>Preço</span>
+              <span>24h %</span>
+            </div>
+            <div class="watchlist-rows" id="watchlistRows"></div>
+          </div>
+        </article>
+
+        <!-- Card Compacto de Execução Simulada / Alertas de Sinais -->
+        <article class="alerts-card liquid-glass">
+          <div class="alerts-header">
+            <div class="alerts-title">
+              <span class="material-symbols-rounded text-accent">notifications_active</span>
+              <h3>Log de Sinais & Cruzamentos</h3>
+            </div>
+            <button type="button" class="chip-mini" id="btnClearLogs">Limpar</button>
+          </div>
+          <div class="signal-log-list" id="signalLogList">
+            <div class="log-empty">Aguardando eventos técnicos em tempo real...</div>
+          </div>
+        </article>
+      </aside>
+    </section>
+  </main>
+
+  <!-- Barra Flutuante Mobile (iOS Floating Pill Dock) -->
+  <nav class="mobile-dock liquid-glass" aria-label="Navegação rápida mobile">
+    <button class="dock-btn active" data-scroll="top">
+      <span class="material-symbols-rounded">monitoring</span>
+      <span>Gráfico</span>
+    </button>
+    <button class="dock-btn" data-scroll="signalDeckCard">
+      <span class="material-symbols-rounded">bolt</span>
+      <span>Sinais</span>
+    </button>
+    <button class="dock-btn" data-tab-jump="orderbook">
+      <span class="material-symbols-rounded">menu_book</span>
+      <span>Livro</span>
+    </button>
+    <button class="dock-btn" data-tab-jump="trades">
+      <span class="material-symbols-rounded">swap_vert</span>
+      <span>Fluxo</span>
+    </button>
+  </nav>
+
+  <!-- Script Principal -->
+  <script src="app.js"></script>
+</body>
+</html>
