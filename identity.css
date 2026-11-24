@@ -1,0 +1,92 @@
+/* zTRADING / shared identity v2
+ * Reusable visual layer. No market-data requests or animation-generated prices.
+ */
+:root{
+  --identity-width:340px;
+  --identity-bg:#11151b;
+  --identity-border:rgba(255,255,255,.18);
+  --identity-muted:#aab5c5;
+  --motion-opacity:.20;
+}
+/* A decorative, fixed financial backdrop, behind all interactive surfaces. */
+.ambient-backdrop{
+  background:radial-gradient(ellipse at 50% 0%,rgba(var(--accent-rgb),.075),transparent 62%),var(--bg-canvas);
+}
+.ambient-backdrop::before{
+  content:"";position:absolute;inset:0;
+  background-image:linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);
+  background-size:64px 64px;opacity:.65;
+}
+.ambient-backdrop::after{
+  content:"";position:absolute;inset:-5% -15%;
+  background:url("market-motion.svg") center 65%/min(1440px,100%) auto repeat-x;
+  opacity:var(--motion-opacity);
+  animation:market-drift 34s ease-in-out infinite alternate;
+  transform:translate3d(0,0,0);
+}
+@keyframes market-drift{
+  from{transform:translate3d(-3%,1%,0)}
+  to{transform:translate3d(3%,-1%,0)}
+}
+/* Center institutional content. Keep market tables and chart axes aligned for scanning. */
+.market-launch{text-align:center;align-items:center;max-width:1040px}
+.market-brand{flex-direction:column;justify-content:center;gap:12px}
+.market-brand .zt-logo{width:64px;height:64px}
+.market-brand h1{font-size:34px}
+.market-brand p{margin-top:7px}
+.market-launch>.market-kicker{margin-top:40px}
+.market-launch h2{margin-inline:auto}
+.market-intro{margin-inline:auto}
+.market-options{width:100%}
+.market-option{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;min-height:240px}
+.market-card-top{flex-direction:column;justify-content:center;gap:12px}
+.market-card-top svg{width:38px;height:38px}
+.market-option h3{margin:16px 0 5px}
+.market-option>span:last-child{justify-content:center;margin-top:18px}
+.market-launch>footer:not(.project-credit){width:100%;text-align:center}
+.stock-controls{justify-content:center}
+.stock-controls form{margin-left:0;text-align:center}
+.stock-pills,.stock-search{justify-content:center}
+.stock-status,#providerStatus,.stock-note{text-align:center}
+.stock-kpis .kpi-card,.market-kpi-strip .kpi-card:not(.kpi-hero){text-align:center;align-items:center}
+.stock-kpis .kpi-label,.market-kpi-strip .kpi-card:not(.kpi-hero) .kpi-label{justify-content:center}
+.market-kpi-strip .kpi-card:not(.kpi-hero) .liquidity-mini-bar{width:100%}
+.stock-side h2,.stock-trend{text-align:center}
+/* Shared GitHub signature / Dynamic Island. Two separate, real link targets. */
+.project-credit{
+  width:100%;display:grid;justify-items:center;gap:12px;
+  position:relative;text-align:center;padding:28px 0 18px;
+}
+.market-launch .project-credit{border:0;padding-top:24px}
+.project-credit-rule{width:min(380px,85%);height:1px;background:linear-gradient(90deg,transparent,var(--identity-border),transparent)}
+.credit-eyebrow{color:var(--identity-muted);font:500 10px var(--font-mono);letter-spacing:.16em}
+.github-island{
+  display:grid;width:min(100%,var(--identity-width));gap:0;
+  background:linear-gradient(145deg,#1c222b,var(--identity-bg) 65%);
+  border:1px solid var(--identity-border);border-radius:30px;overflow:hidden;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.09),0 12px 30px rgba(0,0,0,.3);
+  transition:border-color .2s,box-shadow .2s;
+}
+.github-island:hover,.github-island:focus-within{border-color:rgba(var(--accent-rgb),.68);box-shadow:0 8px 32px rgba(var(--accent-rgb),.12)}
+.github-identity{display:grid;grid-template-columns:44px minmax(0,1fr) 44px;align-items:center;gap:10px;padding:15px 16px;text-decoration:none;color:var(--text-primary)}
+.github-mark{display:grid;place-items:center;width:44px;height:44px;border:1px solid var(--identity-border);border-radius:15px;background:rgba(255,255,255,.055);color:var(--text-primary)}
+.github-mark svg{width:25px;height:25px;display:block}
+.github-island-text{display:grid;justify-items:center;gap:4px;line-height:1.3}
+.github-island-text strong{font:700 19px var(--font-sans);letter-spacing:-.025em}
+.github-island-text small{font:400 10px var(--font-mono);color:var(--identity-muted)}
+.credit-arrow{display:grid;place-items:center;color:var(--accent)}
+.github-repository{display:flex;justify-content:center;align-items:center;gap:7px;min-height:44px;border-top:1px solid rgba(255,255,255,.09);color:var(--accent);font:600 12px var(--font-sans);text-decoration:none}
+.github-identity:hover,.github-repository:hover{background:rgba(255,255,255,.045)}
+.github-identity:focus-visible,.github-repository:focus-visible{outline:2px solid var(--accent);outline-offset:-3px}
+.credit-caption{font:400 10px var(--font-mono);color:var(--identity-muted)}
+@media(max-width:768px){
+ .market-launch{padding-top:32px}.market-launch>.market-kicker{margin-top:28px}
+ .market-option{min-height:190px}
+ .market-brand h1{font-size:30px}
+ .project-credit{padding-top:24px}
+ [data-market="crypto"] .project-credit{padding-bottom:12px}
+ [data-market="stocks"] .stock-shell{padding-bottom:24px}
+ .ambient-backdrop::after{inset:0 -50%;background-size:1000px auto;opacity:.14}
+}
+@media(prefers-reduced-motion:reduce){.ambient-backdrop::after{animation:none;transform:none}.github-island{transition:none}}
+@media(prefers-reduced-transparency:reduce){.github-island{background:var(--identity-bg)}.ambient-backdrop::after{opacity:.08}}

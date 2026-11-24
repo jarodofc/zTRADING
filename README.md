@@ -37,6 +37,8 @@ stocks.js        # API B3, normalização e gráfico
 indicators.js    # EMA, SMA, RSI e MACD compartilhados
 styles.css       # tokens e componentes do design system
 markets.css      # temas de mercado e layout responsivo
+identity.css     # assinatura GitHub e padrão visual compartilhado
+market-motion.svg # motivo vetorial decorativo de mercado
 logo.svg         # identidade vetorial
 api/stocks.js    # proxy Node.js (Vercel), token no servidor
 ```
@@ -77,4 +79,4 @@ Ferramenta educacional e de análise. Não é recomendação de investimento.
 
 ## Autoria
 
-Desenvolvido por [@jarodofc](https://github.com/jarodofc). O perfil está disponível na cápsula Dynamic Island ao final das páginas do terminal.
+Desenvolvido por [@jarodofc](https://github.com/jarodofc). O perfil e o repositório estão disponíveis em uma assinatura Dynamic Island centralizada nas três páginas. O padrão reutilizável está documentado em [Identidade visual](docs/visual-standard.md). O fundo animado é exclusivamente decorativo e não representa preços, tendências ou negociações reais.
