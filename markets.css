@@ -1,0 +1,38 @@
+/* zTRADING market shell: shared M3 / Liquid Glass visual tokens */
+.market-home{text-decoration:none;color:var(--text-primary)}
+.zt-logo{flex-shrink:0}
+.market-launch{position:relative;max-width:960px;margin:0 auto;padding:clamp(30px,9vw,100px) 22px;min-height:100vh;display:flex;flex-direction:column;justify-content:center}
+.market-brand,.stock-nav{display:flex;align-items:center;gap:14px}
+.market-brand h1,.stock-nav h1{font-family:var(--font-display);font-size:28px;letter-spacing:-.04em;margin:0}
+.market-brand p,.market-kicker{font:500 11px var(--font-mono);letter-spacing:.1em;color:var(--text-secondary);margin:4px 0}
+.market-launch>.market-kicker{margin-top:56px;color:var(--accent)}
+.market-launch h2{font-family:var(--font-display);font-size:clamp(30px,5vw,54px);line-height:1.1;margin:12px 0}
+.market-intro,.market-option p,.market-launch footer,.stock-note{color:var(--text-secondary);line-height:1.6}
+.market-options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin:30px 0}
+.market-option{display:block;text-decoration:none;color:var(--text-primary);padding:30px;border-radius:24px;transition:transform .2s,background .2s}
+.market-option:hover{transform:translateY(-3px);background:var(--glass-tint-hover)}
+.market-option>.material-symbols-rounded{font-size:36px;color:var(--accent)}
+.market-option h3{font-family:var(--font-display);font-size:24px;margin:22px 0 6px}
+.market-option>span:last-child{display:flex;align-items:center;gap:10px;margin-top:24px;color:var(--accent)}
+.market-option:focus-visible,.market-home:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:4px}
+.market-launch footer,.stock-note{font-size:12px}
+.stock-shell{position:relative;display:grid;gap:16px;padding-top:18px}
+.stock-nav,.stock-controls,.stock-side{padding:16px;border-radius:20px}
+.stock-nav .market-home{margin-left:auto}
+.stock-controls{display:flex;align-items:center;flex-wrap:wrap;gap:16px}
+.stock-pills,.stock-search{display:flex;gap:8px;flex-wrap:wrap}
+.stock-controls form{margin-left:auto;display:grid;gap:4px}
+.stock-controls label{font-size:12px;color:var(--text-secondary)}
+.stock-search input{width:130px;padding:8px 10px;color:var(--text-primary);background:var(--bg-solid);border:1px solid var(--glass-edge);border-radius:12px;font:inherit}
+.stock-status{color:var(--text-secondary);font-size:13px;min-height:20px}
+.stock-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px}
+.stock-workspace{display:grid;grid-template-columns:minmax(0,3fr) minmax(220px,1fr);gap:16px}
+.stock-chart{height:clamp(280px,48vh,560px);min-width:0}
+.stock-side h2{font-size:18px;margin:0 0 12px}
+.stock-trend{font-size:15px;color:var(--accent);margin-bottom:12px}
+.stock-stat{display:flex;justify-content:space-between;gap:12px;padding:13px 0;border-bottom:1px solid var(--glass-edge);color:var(--text-secondary)}
+.stock-stat strong{color:var(--text-primary)}
+.stock-note{padding:8px 12px}
+.stock-note a{color:var(--accent)}
+@media(max-width:760px){.market-options,.stock-workspace{grid-template-columns:1fr}.market-launch>.market-kicker{margin-top:32px}.stock-controls form{margin-left:0}.stock-nav .market-home{font-size:12px}}
+@media(prefers-reduced-motion:reduce){.market-option{transition:none}.market-option:hover{transform:none}}
