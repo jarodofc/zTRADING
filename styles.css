@@ -1,27 +1,28 @@
 /* ==========================================================================
-   AETHER TERMINAL — Material Design 3 + iOS Liquid Glass Design System
+   zTRADING MARKET INTELLIGENCE TERMINAL — Material Design 3 + iOS Liquid Glass Design System
    ========================================================================== */
 
 :root {
   /* Paleta Escura Temática (Obsidian + Aurora) */
-  --bg-canvas: #050811;
-  --bg-elevated: #0b1120;
-  --bg-solid: #0f1629;
+  --bg-canvas: #0b0d10;
+  --bg-elevated: #11151b;
+  --bg-solid: #171c23;
 
   /* Tipografia */
-  --font-display: 'Syne', sans-serif;
+  --font-display: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
   --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
   --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
 
   /* Cores de Texto */
-  --text-primary: #f1f5fb;
-  --text-secondary: #98a8c3;
-  --text-muted: #5e6f8c;
+  --text-primary: #f0f3f7;
+  --text-secondary: #b2bdcc;
+  --text-muted: #8995a6;
 
   /* Cores de Destaque & Mercado */
-  --accent: #38bdf8;
-  --accent-glow: rgba(56, 189, 248, 0.35);
-  --accent-2: #a855f7;
+  --accent: #70a7ff;
+  --accent-rgb: 112, 167, 255;
+  --accent-glow: rgba(var(--accent-rgb), 0.35);
+  --accent-2: #a8b7cc;
   --amber: #f5b731;
 
   --buy: #00f5a0;
@@ -36,13 +37,13 @@
   --neutral-border: rgba(148, 163, 184, 0.28);
 
   /* iOS Liquid Glass Tokens */
-  --glass-tint: rgba(14, 22, 40, 0.48);
-  --glass-tint-hover: rgba(19, 30, 54, 0.58);
-  --glass-blur: 18px;
-  --glass-saturate: 175%;
-  --glass-edge: rgba(255, 255, 255, 0.12);
-  --glass-specular: rgba(255, 255, 255, 0.24);
-  --glass-shadow: 0 14px 38px rgba(0, 0, 0, 0.42);
+  --glass-tint: rgba(23, 28, 35, 0.88);
+  --glass-tint-hover: rgba(31, 38, 47, 0.96);
+  --glass-blur: 12px;
+  --glass-saturate: 115%;
+  --glass-edge: rgba(255, 255, 255, 0.13);
+  --glass-specular: rgba(255, 255, 255, 0.13);
+  --glass-shadow: 0 8px 24px rgba(0, 0, 0, 0.22);
 
   /* Raios & Movimento Material 3 */
   --radius-xl: 24px;
@@ -122,7 +123,7 @@ body {
   border-radius: 99px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(56, 189, 248, 0.45);
+  background: rgba(var(--accent-rgb), 0.45);
 }
 
 /* ==========================================================================
@@ -354,8 +355,8 @@ body {
   border-radius: 50%;
   display: grid;
   place-items: center;
-  background: linear-gradient(135deg, rgba(0, 245, 160, 0.25), rgba(56, 189, 248, 0.35));
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 0 20px rgba(56, 189, 248, 0.25);
+  background: linear-gradient(135deg, rgba(0, 245, 160, 0.25), rgba(var(--accent-rgb), 0.35));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 0 20px rgba(var(--accent-rgb), 0.25);
   color: var(--text-primary);
 }
 
@@ -480,8 +481,8 @@ body {
 }
 
 .icon-pill-btn:hover {
-  background: rgba(56, 189, 248, 0.16);
-  border-color: rgba(56, 189, 248, 0.45);
+  background: rgba(var(--accent-rgb), 0.16);
+  border-color: rgba(var(--accent-rgb), 0.45);
 }
 
 /* ==========================================================================
@@ -517,7 +518,7 @@ body {
   background: var(--glass-tint-hover);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.32),
-    inset 0 0 0 1px rgba(56, 189, 248, 0.22),
+    inset 0 0 0 1px rgba(var(--accent-rgb), 0.22),
     0 18px 42px rgba(0, 0, 0, 0.48);
 }
 
@@ -547,8 +548,8 @@ body {
   padding: 2px 7px;
   border-radius: var(--radius-pill);
   color: var(--accent);
-  background: rgba(56, 189, 248, 0.14);
-  border: 1px solid rgba(56, 189, 248, 0.3);
+  background: rgba(var(--accent-rgb), 0.14);
+  border: 1px solid rgba(var(--accent-rgb), 0.3);
 }
 
 .change-pill {
@@ -752,8 +753,8 @@ body {
 
 .tf-btn.active {
   color: #fff;
-  background: rgba(56, 189, 248, 0.24);
-  box-shadow: inset 0 0 0 1px rgba(56, 189, 248, 0.5);
+  background: rgba(var(--accent-rgb), 0.24);
+  box-shadow: inset 0 0 0 1px rgba(var(--accent-rgb), 0.5);
 }
 
 .overlay-toggles {
@@ -1185,8 +1186,8 @@ body {
 
 .seg-tab.active {
   color: var(--text-primary);
-  background: rgba(56, 189, 248, 0.22);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.28), inset 0 0 0 1px rgba(56, 189, 248, 0.45);
+  background: rgba(var(--accent-rgb), 0.22);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.28), inset 0 0 0 1px rgba(var(--accent-rgb), 0.45);
 }
 
 .tab-pane {
@@ -1448,8 +1449,8 @@ body {
 }
 
 .watch-row.active {
-  background: rgba(56, 189, 248, 0.14);
-  border-color: rgba(56, 189, 248, 0.38);
+  background: rgba(var(--accent-rgb), 0.14);
+  border-color: rgba(var(--accent-rgb), 0.38);
 }
 
 /* ==========================================================================
@@ -1629,7 +1630,7 @@ body {
 
   .dock-btn.active {
     color: var(--text-primary);
-    background: rgba(56, 189, 248, 0.22);
+    background: rgba(var(--accent-rgb), 0.22);
     box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.28);
   }
 }

@@ -1,1 +1,7 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none"><rect x="2" y="2" width="60" height="60" rx="18" fill="#0f1629" stroke="#38bdf8" stroke-width="2"/><path d="M15 20h34L15 44h34" stroke="#e2e8f0" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><path d="M44 12v14m-5-9h10" stroke="#38bdf8" stroke-width="2" stroke-linecap="round"/><circle cx="48" cy="45" r="3" fill="#00f5a0"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>zTRADING</title>
+  <rect x="1" y="1" width="62" height="62" rx="16" fill="#11151b" stroke="#596579" stroke-width="2"/>
+  <path d="M15 17h34L15 46h34" stroke="#edf2f7" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="m17 39 10-8 8 3 12-13" stroke="#70a7ff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M39 21h8v8" stroke="#70a7ff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

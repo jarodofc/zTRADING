@@ -1,6 +1,21 @@
-# zTRADING
+<p align="center"><img src="logo.svg" alt="zTRADING" width="80" /></p>
 
-Terminal web multimercado com identidade Liquid Glass inspirada no iOS, Material UX, logotipo SVG próprio e tipografia Plus Jakarta Sans, Syne e JetBrains Mono.
+# zTRADING | Market Intelligence Terminal
+
+Terminal web multimercado com identidade minimalista inspirada no Liquid Glass do iOS e Material 3, logotipo SVG próprio e tipografia Plus Jakarta Sans e JetBrains Mono.
+
+## Identidade visual
+
+| Elemento | Especificação |
+|---|---|
+| Obsidiana | `#0B0D10` |
+| Prata | `#F0F3F7` |
+| Marca / entrada | `#70A7FF` (azul elétrico) |
+| Criptomoedas | `#E8BC6A` (dourado) |
+| Ações | `#67D7C5` (verde-água) |
+| Tipografia | Plus Jakarta Sans / JetBrains Mono |
+
+Os destaques de navegação identificam o mercado, enquanto as cores semânticas de alta e baixa permanecem independentes. Os estilos compartilhados incluem foco visível, responsividade e preferências de movimento e transparência reduzidos.
 
 ## Mercados
 
@@ -20,8 +35,8 @@ app.js           # Binance e interface cripto
 stocks.html      # terminal B3
 stocks.js        # API B3, normalização e gráfico
 indicators.js    # EMA, SMA, RSI e MACD compartilhados
-styles.css       # design system existente
-markets.css      # menu e módulo B3
+styles.css       # tokens e componentes do design system
+markets.css      # temas de mercado e layout responsivo
 logo.svg         # identidade vetorial
 api/stocks.js    # proxy Node.js (Vercel), token no servidor
 ```
