@@ -73,3 +73,17 @@
 @media(max-width:760px){.market-launch{min-height:100svh;justify-content:flex-start;padding-top:40px}.market-option{min-height:0;padding:24px}.market-launch h2{font-size:clamp(29px,7vw,44px)}.stock-nav h1{font-size:22px}.stock-nav .market-home{margin-left:auto}.stock-controls{align-items:flex-start}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}.ticker-track{animation:none!important}}
 @media(prefers-reduced-transparency:reduce){.liquid-glass,.liquid-glass-flat,.market-option{background:var(--bg-solid);backdrop-filter:none;-webkit-backdrop-filter:none}}
+
+/* Dynamic Island: developer identity, independent from market-data status. */
+.project-credit{display:flex;justify-content:center;align-items:center;padding:24px 0 8px;position:relative}
+.market-launch .project-credit{border:0;padding:24px 0 0}
+.github-island{display:inline-flex;align-items:center;gap:12px;max-width:100%;padding:10px 15px;border-radius:999px;border:1px solid var(--glass-edge);background:#101318;color:var(--text-primary);text-decoration:none;box-shadow:0 5px 20px rgba(0,0,0,.25);transition:border-color .18s,background .18s}
+.github-island>svg:first-child{flex:none;color:var(--text-primary)}
+.github-island-text{display:grid;gap:1px;line-height:1.25}
+.github-island-text strong{font:600 13px var(--font-sans)}
+.github-island-text small{font:400 10px var(--font-mono);color:var(--text-secondary)}
+.github-island-arrow{margin-left:6px;color:var(--accent);flex:none}
+.github-island:hover{border-color:var(--accent);background:var(--bg-solid)}
+.github-island:focus-visible{outline:2px solid var(--accent);outline-offset:4px}
+@media(max-width:760px){[data-market="crypto"] .project-credit{padding-bottom:92px}}
+@media(prefers-reduced-motion:reduce){.github-island{transition:none}}

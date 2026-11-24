@@ -74,3 +74,7 @@ Para negócios e livro de ofertas em tempo real, PNT oferece SignalR e Cedro ofe
 - [Lightweight Charts](https://tradingview.github.io/lightweight-charts/)
 
 Ferramenta educacional e de análise. Não é recomendação de investimento.
+
+## Autoria
+
+Desenvolvido por [@jarodofc](https://github.com/jarodofc). O perfil está disponível na cápsula Dynamic Island ao final das páginas do terminal.
