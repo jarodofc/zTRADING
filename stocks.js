@@ -7,11 +7,11 @@ const money=new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'});
 const decimal=new Intl.NumberFormat('pt-BR',{maximumFractionDigits:2});
 const valid=x=>typeof x==='number'&&Number.isFinite(x);
 const fmt=(x,f=decimal)=>valid(x)?f.format(x):'—';
-let symbol='PETR4',interval='1d',range='3mo',controller,serial=0,bars=[],chart,candle,volume,lines=[],overlays=[true,true,true];
+let symbol='PETR4',interval='1d',range='3mo',source='auto',controller,serial=0,bars=[],chart,candle,volume,lines=[],overlays=[true,true,true];
 const status=t=>$('status').textContent=t;
 function clear(){
  bars=[];for(const id of ['price','change','high','low','volume','rsi','macd','ema9','ema21','sma50'])$(id).textContent='—';
- $('asset').textContent=symbol;$('trend').textContent='Dados insuficientes';
+ $('asset').textContent=symbol;$('trend').textContent='Dados insuficientes';$('providerStatus').textContent='Consultando fontes; streaming ao vivo não conectado';
  if(chart){candle.setData([]);volume.setData([]);lines.forEach(x=>x.setData([]));}
 }
 function initChart(){
@@ -39,7 +39,7 @@ function draw(){
  $('trend').textContent=![a,b,c,p].every(valid)?'Histórico insuficiente para tendência':a>b&&p>c?'Viés de alta pelas médias':a<b&&p<c?'Viés de baixa pelas médias':'Médias sem alinhamento';
 }
 async function request(s,i,r,signal){
- const params=new URLSearchParams({symbol:s,interval:i,range:r});
+ const params=new URLSearchParams({symbol:s,interval:i,range:r,source});
  let response;
  try {response=await fetch('./api/stocks?'+params,{signal,headers:{Accept:'application/json'}});}catch(e){if(signal.aborted)throw e;}
  if(!response||response.status===404||!response.headers.get('content-type')?.includes('application/json')){
@@ -47,16 +47,20 @@ async function request(s,i,r,signal){
   response=await fetch('https://brapi.dev/api/quote/'+encodeURIComponent(s)+'?'+new URLSearchParams({interval:i,range:r}),{signal});
  }
  if(!response.ok)throw Error(response.status===429?'Limite de consultas da API atingido.':response.status===400||response.status===401||response.status===403?'Ativo ou intervalo não disponível no plano da API.':'Falha na fonte de dados ('+response.status+').');
- const data=await response.json();const q=data.results?.[0];if(!q||q.symbol!==s)throw Error('Cotação não encontrada para este ticker.');return q;
+ const data=await response.json();const q=data.results?.[0];if(!q||q.symbol!==s)throw Error('Cotação não encontrada para este ticker.');return {...q,provenance:q.provenance||{quote:'brapi',history:q.historicalDataPrice?.length?'brapi':null,quoteMode:'delayed_or_unknown',pntStatus:'backend_required',historyFallback:source==='pnt'}};
 }
 async function load(){
- controller?.abort();controller=new AbortController();const run=++serial,s=symbol,i=interval,r=range;clear();status('Consultando '+s+' na brapi.dev…');
+ controller?.abort();controller=new AbortController();const run=++serial,s=symbol,i=interval,r=range;clear();status('Consultando fontes de '+s+'…');
  try{
   const q=await request(s,i,r,controller.signal);if(run!==serial)return;
   $('asset').textContent=q.symbol;$('price').textContent=fmt(q.regularMarketPrice,money);$('change').textContent=valid(q.regularMarketChangePercent)?fmt(q.regularMarketChangePercent)+'%':'—';$('high').textContent=fmt(q.regularMarketDayHigh,money);$('low').textContent=fmt(q.regularMarketDayLow,money);$('volume').textContent=fmt(q.regularMarketVolume);
   bars=normalize(q.historicalDataPrice);draw();chart?.timeScale().fitContent();
   const time=new Date(q.regularMarketTime);const stamp=q.regularMarketTime&&Number.isFinite(time.valueOf())?time.toLocaleString('pt-BR',{timeZone:'America/Sao_Paulo'})+' (Brasília)':'horário não informado';
-  status('brapi.dev · '+stamp+' · dados podem ter atraso'+(!bars.length?' · histórico indisponível':' · '+bars.length+' candles')+(!chart?' · gráfico indisponível':''));
+  const p=q.provenance;
+  const sourceName=x=>x==='pnt'?'PNT':x==='brapi'?'brapi':'indisponível';
+  const histStamp=bars.length?new Date(bars.at(-1).time*1000).toISOString().slice(0,10):'—';
+  status('Cotação: '+sourceName(p.quote)+' · '+(p.quote?stamp+' · pode ter atraso':'sem cotação')+' | Histórico: '+sourceName(p.history)+' · '+bars.length+' candles · último: '+histStamp+(p.historyFallback?' · PNT indisponível; fallback':'')+(!chart?' · gráfico indisponível':''));
+  $('providerStatus').textContent='brapi: '+(p.quote?'cotação disponível':'cotação indisponível')+' | PNT: '+(p.pntStatus==='available'?'histórico disponível':p.pntStatus==='not_requested'?'não consultada':p.pntStatus==='not_configured'||p.pntStatus==='backend_required'?'requer servidor e credenciais':p.pntStatus==='unsupported_interval'?'intervalo não suportado':'indisponível')+' | Streaming ao vivo: não conectado';
  }catch(e){if(run===serial&&!controller.signal.aborted){clear();status(e.message||'Não foi possível consultar a fonte.');}}
 }
 function choose(s){symbol=s;document.querySelectorAll('[data-symbol]').forEach(b=>{const on=b.dataset.symbol===s;b.classList.toggle('active',on);b.setAttribute('aria-pressed',String(on));});load();}
@@ -65,6 +69,7 @@ $('symbolForm').addEventListener('submit',e=>{e.preventDefault();const s=$('symb
 document.querySelectorAll('[data-interval]').forEach(b=>b.addEventListener('click',()=>{interval=b.dataset.interval;range=b.dataset.range;document.querySelectorAll('[data-interval]').forEach(x=>{x.classList.toggle('active',x===b);x.setAttribute('aria-pressed',String(x===b));});load();}));
 document.querySelectorAll('[data-overlay]').forEach(b=>b.addEventListener('click',()=>{const i=Number(b.dataset.overlay);overlays[i]=!overlays[i];b.classList.toggle('active',overlays[i]);b.setAttribute('aria-pressed',String(overlays[i]));draw();}));
 $('fit').addEventListener('click',()=>chart?.timeScale().fitContent());$('refresh').addEventListener('click',load);
+$('historySource').addEventListener('change',e=>{source=e.target.value;load();});
 initChart();load();
 window.addEventListener('pagehide',()=>controller?.abort());
 })();

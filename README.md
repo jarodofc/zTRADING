@@ -22,7 +22,7 @@ Os destaques de navegação identificam o mercado, enquanto as cores semânticas
 | Módulo | Fonte | Recursos |
 |---|---|---|
 | Criptomoedas | Binance Spot REST e WebSocket | Candles, indicadores, livro de ofertas, negócios e watchlist |
-| Ações B3 | brapi.dev REST | Cotação BRL, histórico OHLCV, indicadores, filtros e busca de ticker |
+| Ações B3 | brapi REST + PNT histórico REST opcional | Cotação BRL, histórico OHLCV, indicadores, filtros e busca de ticker |
 
 A entrada permite escolher o mercado e retornar a qualquer momento. Ações não simulam preços, negócios ou livro de ofertas; a data do provedor é exibida. O módulo cripto legado pode ativar o fallback explicitamente identificado como feed simulado; não use dados simulados para decisões reais. Indicadores são descritivos, sem execução de ordens.
 
@@ -45,7 +45,18 @@ api/stocks.js    # proxy Node.js (Vercel), token no servidor
 
 Sirva a raiz via servidor HTTP estático (por exemplo, `python -m http.server 8080`) e abra http://localhost:8080. O navegador precisa acessar as fontes, Lightweight Charts e APIs externas. Em hospedagem estática, as quatro ações de demonstração (PETR4, VALE3, ITUB4, MGLU3) usam o endpoint público da brapi, sujeito a CORS e limites.
 
-Para ampliar o universo de ações, importe o repositório na Vercel como projeto sem framework e configure a variável de ambiente `BRAPI_TOKEN` no servidor; o proxy em `/api/stocks` utiliza o token sem enviá-lo ao navegador. A API pode limitar intervalos, frequência, licenciamento e histórico por plano. O proxy tem cache compartilhado de 60 segundos; para implantação pública de produção, configure proteção contra abuso e limites de consumo.
+Para ampliar o universo de ações, importe o repositório na Vercel como projeto sem framework e configure a variável de ambiente `BRAPI_TOKEN` no servidor; o proxy em `/api/stocks` utiliza o token sem enviá-lo ao navegador. A API pode limitar intervalos, frequência, licenciamento e histórico por plano. O proxy retorna respostas privadas sem cache compartilhado; antes de implantar em produção, configure controle de acesso, proteção contra abuso e limites de consumo.
+
+## Agregação de fontes B3
+
+A API `/api/stocks` mantém cotação e histórico como recursos independentes. A cotação vem da brapi; o histórico pode vir da brapi ou PNT. O modo automático compara disponibilidade, cobertura e data final; o modo PNT prioriza seu histórico e sinaliza fallback. Séries de candles de fontes diferentes não são concatenadas, evitando misturar ajustes societários. Cada resposta identifica a origem dos dados. Não se trata de streaming ao vivo.
+
+Configure `PNT_CLIENT_ID` e `PNT_CLIENT_SECRET` no servidor para a API histórica PNT com escopo `pntdata.hist`; use credenciais e plano fornecidos pelo provedor. A PNT histórica suporta intervalos diários e de 15 minutos usados pelo terminal, não o semanal. Sem credenciais, a brapi continua operando. O agregador não compartilha cache de dados licenciados. Antes de publicar com credenciais comerciais, restrinja acesso ao servidor, aplique limites de consumo e confirme os direitos de exibição/redistribuição com os fornecedores.
+
+Para negócios e livro de ofertas em tempo real, PNT oferece SignalR e Cedro oferece WebSocket. A ativação desses streams exige contratação, credenciais e backend de conexão persistente; esses streams ainda não estão implementados. Não envie chaves de acesso ao navegador.
+
+- [PNT: documentação histórica e streaming](https://md.pnt.api.br/doc.html)
+- [Cedro: WebSocket](https://cedrotech.com/market-apis/api-websocket/)
 
 ## Validação
 
